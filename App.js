@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -27,16 +27,20 @@ const objects = [
   },
 ];
 
-export default function App() {
-  const [password, setPassword] = useState("");
+const passwords = [];
 
+for (const i in objects) {
+  passwords.push("");
+}
+
+export default function App() {
   const checkTextInput = (item) => {
-    if (!password.trim()) {
+    if (!passwords[item.id - 1].trim()) {
       alert("Please enter password!");
       return;
     }
 
-    if (password === item) {
+    if (passwords[item.id - 1] === item.pwd) {
       alert("Congrats!");
     } else {
       alert("Wrong password!");
@@ -83,7 +87,7 @@ export default function App() {
                 style={styles.textbox}
                 placeholder="Password"
                 placeholderTextColor="#c3c3c3"
-                onChangeText={(value) => setPassword(value)}
+                onChangeText={(value) => (passwords[item.id - 1] = value)}
               ></TextInput>
               <TouchableOpacity
                 style={{
@@ -95,7 +99,7 @@ export default function App() {
                   elevation: 5,
                 }}
                 onPress={() => {
-                  checkTextInput(item.pwd);
+                  checkTextInput(item);
                 }}
               >
                 <Text
