@@ -5,13 +5,12 @@ export const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: "#c6ecec",
       alignItems: "center",
-      justifyContent: "center",
     },
   
     innerContainer: {
       alignItems: "center",
       backgroundColor: "#fff",
-      marginBottom: "4%",
+      marginBottom: "6%",
       elevation: 1,
       paddingVertical: "2%",
       paddingHorizontal: "2%",
@@ -23,7 +22,6 @@ export const styles = StyleSheet.create({
       alignText: "center",
       height: 55,
       backgroundColor: "#fff",
-      paddingHorizontal: 40,
       fontSize: 23,
       borderRadius: 10,
     },

@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import { styles } from "mqttproject/components/styles/stylesheet.js";
-import Paho from "paho-mqtt";
 import {
   Text,
   TextInput,
@@ -8,24 +7,20 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
-  Button,
 } from "react-native";
 
 const objects = [
   {
     id: "1",
-    description: "What is 1+1?",
-    pwd: "2",
+    description: "What's the password?",
+    pwd: "always with you",
+    msg: "Lower nightstand drawer",
   },
   {
     id: "2",
-    description: "What is the capital of UAE?",
-    pwd: "AbuDhabi",
-  },
-  {
-    id: "3",
-    description: "Where is Burj Khalifa located?",
-    pwd: "Dubai",
+    description: "yaxz kap",
+    pwd: "love you",
+    msg: "under the pillow",
   },
 ];
 
@@ -35,40 +30,7 @@ for (const i in objects) {
   passwords.push("");
 }
 
-var client = new Paho.Client(
-  "broker.hivemq.com",
-  Number(8000),
-  `mqtt-async-test-${parseInt(Math.random() * 100)}`
-);
-
-const Homepage = ({navigation}) => {
-
-  const [value, setValue] = useState(0);
-
-  function onMessage(message) {
-    if (message.destinationName === "mqtt-async-test/value")
-      setValue(parseInt(message.payloadString));
-  }
-
-  useEffect(() => {
-    client.connect({
-      onSuccess: () => {
-        console.log("Connected!");
-        client.subscribe("mqtt-async-test/value");
-        client.onMessageArrived = onMessage;
-      },
-      onFailure: () => {
-        console.log("Failed to connect!");
-      }
-    });  
-  }, [])
-
-  function changeValue(c) {
-    const message = new Paho.Message((value + 1).toString());
-    message.destinationName = "mqtt-async-test/value";
-    c.send(message);
-  }
-
+const Homepage = ({ navigation }) => {
   const checkTextInput = (item) => {
     if (!passwords[item.id - 1].trim()) {
       alert("Please enter password!");
@@ -76,7 +38,7 @@ const Homepage = ({navigation}) => {
     }
 
     if (passwords[item.id - 1] === item.pwd) {
-      alert("Congrats!");
+      alert(item.msg);
     } else {
       alert("Wrong password!");
     }
@@ -110,8 +72,23 @@ const Homepage = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text> Value is: {value} </Text>
-      <Button onPress={() => { changeValue(client);} } title="Press Me"/>
+      <TouchableOpacity
+        style={{
+          marginTop: "8%",
+          marginLeft: "77%",
+        }}
+        onPress={() => navigation.navigate("Login")}
+      >
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            color: "#046464",
+          }}
+        >
+          Logout
+        </Text>
+      </TouchableOpacity>
       <FlatList
         style={{ marginTop: "4%" }}
         keyExtractor={keyExtractor}
@@ -124,6 +101,7 @@ const Homepage = ({navigation}) => {
                 style={styles.textbox}
                 placeholder="Password"
                 placeholderTextColor="#c3c3c3"
+                multiline
                 onChangeText={(value) => (passwords[item.id - 1] = value)}
               ></TextInput>
               <TouchableOpacity
@@ -159,6 +137,6 @@ const Homepage = ({navigation}) => {
       />
     </View>
   );
-}
+};
 
 export default Homepage;

@@ -19,12 +19,12 @@ const Login = ({ navigation }) => {
     }
 
     if (password === correctPassword) {
-        alert("Login Successful!")
-        navigation.navigate("Homepage");
-        return;
+      alert("Login Successful!");
+      navigation.navigate("Homepage");
+      return;
     }
-    
-    alert("Wrong Password!")
+
+    alert("Wrong Password!");
   };
 
   return (
@@ -56,7 +56,16 @@ const Login = ({ navigation }) => {
         </Text>
 
         <TextInput
-          style={[styles.textbox, { marginTop: "10%", marginHorizontal: "10%", }]}
+          style={{
+            marginTop: "10%",
+            marginHorizontal: "10%",
+            alignText: "center",
+            height: 55,
+            backgroundColor: "#fff",
+            paddingHorizontal: 40,
+            fontSize: 23,
+            borderRadius: 10,
+          }}
           placeholder="Password"
           placeholderTextColor="#c3c3c3"
           secureTextEntry={true}
