@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { styles } from "mqttproject/components/styles/stylesheet.js";
 import {
   View,
   Text,

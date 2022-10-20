@@ -1,5 +1,6 @@
-import React from "react";
-import { styles } from "mqttproject/components/styles/stylesheet.js";
+import React, { useEffect } from "react";
+import Paho from "paho-mqtt";
+import { styles } from "../styles/stylesheet.js";
 import {
   Text,
   TextInput,
@@ -8,6 +9,12 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
+
+client = new Paho.Client(
+  "broker.hivemq.com",
+  Number(8000),
+  `mqtt-async-test-${parseInt(Math.random() * 100)}`
+);
 
 const objects = [
   {
@@ -31,6 +38,27 @@ for (const i in objects) {
 }
 
 const Homepage = ({ navigation }) => {
+  function onMessage(message) {
+    if (message.destinationName === "mqtt-async-test/value") {
+      let val = 0;
+      val = parseInt(message.payloadString);
+      if (!isNaN(val)) setValue(val);
+    }
+  }
+
+  useEffect(() => {
+    client.connect({
+      onSuccess: () => {
+        console.log("Connected!");
+        client.subscribe("mqtt-async-test/value");
+        client.onMessageArrived = onMessage;
+      },
+      onFailure: () => {
+        console.log("Failed to connect!");
+      },
+    });
+  }, []);
+
   const checkTextInput = (item) => {
     if (!passwords[item.id - 1].trim()) {
       alert("Please enter password!");
@@ -39,6 +67,7 @@ const Homepage = ({ navigation }) => {
 
     if (passwords[item.id - 1] === item.pwd) {
       alert(item.msg);
+      changeValue(client, item.msg);
     } else {
       alert("Wrong password!");
     }
@@ -69,6 +98,12 @@ const Homepage = ({ navigation }) => {
       </Text>
     );
   };
+
+  function changeValue(c, msg) {
+    const message = new Paho.Message(msg);
+    message.destinationName = "mqtt-async-test/value";
+    c.send(message);
+  }
 
   return (
     <View style={styles.container}>
